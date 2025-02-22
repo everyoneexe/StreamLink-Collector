@@ -45,3 +45,6 @@ Birden Fazla Dil Desteği: Script, kullanımı kolaylaştırmak için birden faz
 
 # AMAÇ 
 Bu kullanıcı scripti, internet bağlantısı zayıf olan veya video akışını doğrudan player üzerinden izlemek isteyen kullanıcılar için geliştirilmiştir. Anime izleme sitelerindeki iframe'lerden doğrudan video bağlantılarını toplayarak, kullanıcıların bu bağlantıları kolayca kopyalayıp, video akışını bir medya player'ında izlemelerini sağlar. Bu sayede, anime izlerken sayfanın yüklenmesi veya video oynatıcılarıyla ilgili sorunlarla uğraşmak yerine, doğrudan video kaynağını alıp daha stabil bir şekilde izleme imkânı sunar.
+
+                                                       Copyright
+                                                       © 2025 everyone.exe. All rights reserved.
