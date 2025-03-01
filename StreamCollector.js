@@ -4,7 +4,7 @@
 // @version       1.4
 // @description   iframe içindeki src değerini otomatik alır ve sol üstte gösterir. Link başı kaydırarak silme, havalı silme, URL türünü gösterme ve yapılandırılmış link listesi eklendi. Links are displayed as plain URLs.
 // @author        everyone.exe
-// @match         *://*.tranimeizle.top/*
+// @match         *://*.example.com/* Here comes the link to the anime site to be used, example *://*animecix.net/* stars are included!
 // @grant         none
 // ==/UserScript==
 
