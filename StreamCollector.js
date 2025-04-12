@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name          Anime Player Otomatik Link Kaydedici (Havalı Silme + URL Türü)
 // @namespace     http://tampermonkey.net/
-// @version       1.4
+// @version       1.5
 // @description   iframe içindeki src değerini otomatik alır ve sol üstte gösterir. Link başı kaydırarak silme, havalı silme, URL türünü gösterme ve yapılandırılmış link listesi eklendi. Links are displayed as plain URLs.
 // @author        everyone.exe
-// @match         *://*.example.com/* Here comes the link to the anime site to be used, example *://*animecix.net/* stars are included!
+// @match         *://*.example.com/* //WRİTE YOUR SİTE
 // @grant         none
 // ==/UserScript==
 
@@ -127,7 +127,7 @@
             document.body.appendChild(linkContainer);
         }
 
-        linkContainer.innerHTML = 'Saved Links';
+        linkContainer.innerHTML = '<h3 style="margin-top:0;color:#fff;font-size:16px;margin-bottom:15px;">Saved Links</h3>';
 
         // Tüm linkleri kopyala butonu
         const copyAllButton = document.createElement('button');
@@ -189,7 +189,7 @@
         resetButton.onclick = () => deleteAllLinksWithAnimation();
         linkContainer.appendChild(resetButton);
 
-        // Linkleri listeleme (yalnızca Copy butonu gösterilir)
+        // Linkleri listeleme (URL ve player tipi gösterilerek)
         links.forEach((item, index) => {
             const linkDiv = document.createElement('div');
             linkDiv.classList.add('link-item');
@@ -201,8 +201,44 @@
                 position: 'relative'
             });
 
+            // Link bilgileri
+            const linkInfo = document.createElement('div');
+            Object.assign(linkInfo.style, {
+                marginBottom: '10px',
+                wordBreak: 'break-all',
+                fontSize: '12px'
+            });
+
+            // Player tipi ve bölüm bilgisi
+            const infoText = document.createElement('div');
+            infoText.innerHTML = `<strong>${item.playerType}</strong> - ${item.bolum}`;
+            Object.assign(infoText.style, {
+                marginBottom: '5px',
+                color: '#f8f9fa'
+            });
+            linkInfo.appendChild(infoText);
+
+            // URL
+            const urlText = document.createElement('div');
+            urlText.textContent = item.url;
+            Object.assign(urlText.style, {
+                color: '#adb5bd',
+                fontSize: '11px'
+            });
+            linkInfo.appendChild(urlText);
+
+            linkDiv.appendChild(linkInfo);
+
+            // Butonlar
+            const buttonsDiv = document.createElement('div');
+            Object.assign(buttonsDiv.style, {
+                display: 'flex',
+                gap: '5px'
+            });
+
+            // Copy butonu
             const copyButton = document.createElement('button');
-            copyButton.textContent = 'Copy'; // Button to copy the plain URL
+            copyButton.textContent = 'Copy';
             Object.assign(copyButton.style, {
                 backgroundColor: '#28a745',
                 color: 'white',
@@ -211,13 +247,30 @@
                 fontSize: '12px',
                 cursor: 'pointer',
                 borderRadius: '30px',
-                width: '100%'
+                flex: '1'
             });
             copyButton.onclick = () => {
                 navigator.clipboard.writeText(item.url).then(() => alert('Link copied successfully!'));
             };
-            linkDiv.appendChild(copyButton);
+            buttonsDiv.appendChild(copyButton);
 
+            // Delete butonu
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            Object.assign(deleteButton.style, {
+                backgroundColor: '#dc3545',
+                color: 'white',
+                border: 'none',
+                padding: '5px 15px',
+                fontSize: '12px',
+                cursor: 'pointer',
+                borderRadius: '30px',
+                flex: '1'
+            });
+            deleteButton.onclick = () => deleteSingleLinkWithAnimation(index, linkDiv);
+            buttonsDiv.appendChild(deleteButton);
+
+            linkDiv.appendChild(buttonsDiv);
             linkContainer.appendChild(linkDiv);
         });
     }
@@ -239,7 +292,8 @@
     function deleteAllLinksWithAnimation() {
         const linkContainer = document.getElementById('linkContainer');
         const links = linkContainer.querySelectorAll('.link-item');
-        const savedLinks = JSON.parse(localStorage.getItem('savedPlayerLinks') || '[]');
+
+        if (links.length === 0) return;
 
         links.forEach((link, index) => {
             setTimeout(() => {
@@ -263,9 +317,10 @@
             localStorage.setItem('savedPlayerLinks', JSON.stringify(savedLinks));
 
             linkDiv.style.animation = 'fadeOut 0.5s forwards';
-            setTimeout(() => linkDiv.remove(), 500);
-
-            updateLinkDisplay();
+            setTimeout(() => {
+                linkDiv.remove();
+                updateLinkDisplay();
+            }, 500);
         }
     }
 
@@ -281,16 +336,27 @@
         updateLinkDisplay();
     });
 
+    // İlk çalıştırma için
+    setTimeout(() => {
+        findAndSaveIframeSrc();
+        updateLinkDisplay();
+    }, 1000);
+
     // Stil düzenlemesi
     const style = document.createElement('style');
     style.innerHTML = `
         @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(-30px); }
         }
 
         .link-item {
             transition: all 0.3s ease;
+        }
+
+        button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
         }
 
         @media screen and (max-width: 768px) {
