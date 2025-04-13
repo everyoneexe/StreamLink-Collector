@@ -4,7 +4,7 @@
 // @version       1.5
 // @description   iframe içindeki src değerini otomatik alır ve sol üstte gösterir. Link başı kaydırarak silme, havalı silme, URL türünü gösterme ve yapılandırılmış link listesi eklendi. Links are displayed as plain URLs.
 // @author        everyone.exe
-// @match         *://*.example.com/* //WRİTE YOUR SİTE
+// @match         *://*.example.com/* 
 // @grant         none
 // ==/UserScript==
 
